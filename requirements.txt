@@ -1,10 +1,9 @@
-pandas
-numpy
-matplotlib
+pandas==3.0.5
+numpy==2.5.1
+matplotlib==3.11.1
 seaborn
 scikit-learn
 xgboost
 lightgbm
 catboost
 joblib
-Path
