@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>توقع سعر المنزل</title>
+<style>
+    * { box-sizing: border-box; }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+        background: linear-gradient(135deg, #1e293b, #0f172a);
+        min-height: 100vh;
+        margin: 0;
+        padding: 30px 15px;
+        color: #e2e8f0;
+    }
+
+    .container {
+        max-width: 720px;
+        margin: 0 auto;
+        background: #1e293b;
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 5px;
+        color: #f1f5f9;
+    }
+
+    p.subtitle {
+        text-align: center;
+        color: #94a3b8;
+        margin-bottom: 25px;
+        font-size: 14px;
+    }
+
+    form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .field.full {
+        grid-column: 1 / -1;
+    }
+
+    label {
+        font-size: 13px;
+        color: #cbd5e1;
+        font-weight: 600;
+    }
+
+    input, select {
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid #334155;
+        background: #0f172a;
+        color: #f1f5f9;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus {
+        border-color: #38bdf8;
+    }
+
+    button {
+        grid-column: 1 / -1;
+        margin-top: 10px;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        background: #38bdf8;
+        color: #0f172a;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    button:hover { background: #0ea5e9; }
+    button:disabled { background: #475569; cursor: not-allowed; }
+
+    #result {
+        grid-column: 1 / -1;
+        margin-top: 5px;
+        text-align: center;
+        font-size: 15px;
+        min-height: 24px;
+    }
+
+    .price {
+        font-size: 28px;
+        font-weight: 800;
+        color: #4ade80;
+    }
+
+    .error {
+        color: #f87171;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🏠 توقع سعر المنزل</h1>
+    <p class="subtitle">أدخل أهم 15 بيانة عن المنزل، والباقي بيتحسب تلقائيًا بأفضل قيم متوازنة</p>
+
+    <form id="predictForm">
+
+        <div class="field">
+            <label>جودة المواد والتشطيب (1 - 10)</label>
+            <input type="number" id="OverallQual" min="1" max="10" value="7" required>
+        </div>
+
+        <div class="field">
+            <label>الحالة العامة للمنزل (1 - 10)</label>
+            <input type="number" id="OverallCond" min="1" max="10" value="5" required>
+        </div>
+
+        <div class="field">
+            <label>مساحة المعيشة فوق الأرض (قدم²)</label>
+            <input type="number" id="GrLivArea" min="0" value="1500" required>
+        </div>
+
+        <div class="field">
+            <label>مساحة البدروم الكلية (قدم²)</label>
+            <input type="number" id="TotalBsmtSF" min="0" value="800" required>
+        </div>
+
+        <div class="field">
+            <label>مساحة الدور الأول (قدم²)</label>
+            <input type="number" id="FirstFlrSF" min="0" value="1000" required>
+        </div>
+
+        <div class="field">
+            <label>مساحة الدور الثاني (قدم²)</label>
+            <input type="number" id="SecondFlrSF" min="0" value="500" required>
+        </div>
+
+        <div class="field">
+            <label>إجمالي عدد الحمامات</label>
+            <input type="number" id="TotalBathrooms" min="0" step="0.5" value="2" required>
+        </div>
+
+        <div class="field">
+            <label>مساحة الجزء المجهز من البدروم (قدم²)</label>
+            <input type="number" id="BsmtFinSF1" min="0" value="400" required>
+        </div>
+
+        <div class="field">
+            <label>مساحة قطعة الأرض (قدم²)</label>
+            <input type="number" id="LotArea" min="0" value="9000" required>
+        </div>
+
+        <div class="field">
+            <label>سعة الجراج (عدد العربيات)</label>
+            <input type="number" id="GarageCars" min="0" value="2" required>
+        </div>
+
+        <div class="field">
+            <label>مساحة الجراج (قدم²)</label>
+            <input type="number" id="GarageArea" min="0" value="480" required>
+        </div>
+
+        <div class="field">
+            <label>سنة البناء</label>
+            <input type="number" id="YearBuilt" min="1800" max="2026" value="2000" required>
+        </div>
+
+        <div class="field">
+            <label>سنة آخر تجديد</label>
+            <input type="number" id="YearRemodAdd" min="1800" max="2026" value="2005" required>
+        </div>
+
+        <div class="field">
+            <label>الحي (Neighborhood)</label>
+            <select id="Neighborhood" required>
+                <option value="Blmngtn">Blmngtn</option>
+                <option value="BrDale">BrDale</option>
+                <option value="BrkSide">BrkSide</option>
+                <option value="ClearCr">ClearCr</option>
+                <option value="CollgCr" selected>CollgCr</option>
+                <option value="Crawfor">Crawfor</option>
+                <option value="Edwards">Edwards</option>
+                <option value="Gilbert">Gilbert</option>
+                <option value="IDOTRR">IDOTRR</option>
+                <option value="MeadowV">MeadowV</option>
+                <option value="Mitchel">Mitchel</option>
+                <option value="NAmes">NAmes</option>
+                <option value="NWAmes">NWAmes</option>
+                <option value="NoRidge">NoRidge</option>
+                <option value="NridgHt">NridgHt</option>
+                <option value="OldTown">OldTown</option>
+                <option value="SWISU">SWISU</option>
+                <option value="Sawyer">Sawyer</option>
+                <option value="SawyerW">SawyerW</option>
+                <option value="Somerst">Somerst</option>
+                <option value="StoneBr">StoneBr</option>
+                <option value="Timber">Timber</option>
+                <option value="Veenker">Veenker</option>
+            </select>
+        </div>
+
+        <div class="field">
+            <label>جودة المطبخ</label>
+            <select id="KitchenQual" required>
+                <option value="Ex">ممتازة (Ex)</option>
+                <option value="Gd" selected>جيدة (Gd)</option>
+                <option value="TA">متوسطة (TA)</option>
+                <option value="Fa">مقبولة (Fa)</option>
+            </select>
+        </div>
+
+        <button type="submit" id="submitBtn">توقع السعر</button>
+
+        <div id="result"></div>
+    </form>
+</div>
+
+<script>
+const form = document.getElementById('predictForm');
+const resultDiv = document.getElementById('result');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const payload = {
+        OverallQual: parseInt(document.getElementById('OverallQual').value),
+        OverallCond: parseInt(document.getElementById('OverallCond').value),
+        GrLivArea: parseFloat(document.getElementById('GrLivArea').value),
+        TotalBsmtSF: parseFloat(document.getElementById('TotalBsmtSF').value),
+        FirstFlrSF: parseFloat(document.getElementById('FirstFlrSF').value),
+        SecondFlrSF: parseFloat(document.getElementById('SecondFlrSF').value),
+        TotalBathrooms: parseFloat(document.getElementById('TotalBathrooms').value),
+        BsmtFinSF1: parseFloat(document.getElementById('BsmtFinSF1').value),
+        LotArea: parseFloat(document.getElementById('LotArea').value),
+        GarageCars: parseFloat(document.getElementById('GarageCars').value),
+        GarageArea: parseFloat(document.getElementById('GarageArea').value),
+        YearBuilt: parseInt(document.getElementById('YearBuilt').value),
+        YearRemodAdd: parseInt(document.getElementById('YearRemodAdd').value),
+        Neighborhood: document.getElementById('Neighborhood').value,
+        KitchenQual: document.getElementById('KitchenQual').value
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'جاري الحساب...';
+    resultDiv.innerHTML = '';
+
+    try {
+        const response = await fetch('/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || 'حصل خطأ غير متوقع');
+        }
+
+        const formatted = data.predicted_price.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 0
+        });
+
+        resultDiv.innerHTML = `السعر المتوقع: <span class="price">${formatted}</span>`;
+
+    } catch (err) {
+        resultDiv.innerHTML = `<span class="error">⚠ ${err.message}</span>`;
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'توقع السعر';
+    }
+});
+</script>
+
+</body>
+</html>
