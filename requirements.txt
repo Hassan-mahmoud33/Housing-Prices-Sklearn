@@ -7,3 +7,5 @@ xgboost
 lightgbm
 catboost
 joblib
+fastapi
+uvicorn
